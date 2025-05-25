@@ -1,48 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tic Tac Toe</title>
-    <link rel="stylesheet" href="style.css" />
-    <link rel="shortcut icon" href="favicon.ico" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Roboto&family=Varela+Round&display=swap"
-      rel="stylesheet"
-    />
-    <script src="script.js" defer></script>
-  </head>
-  <body>
-    <header class="header">
-      <h1 class="title">Tic-Tac-Toe</h1>
-    </header>
-    <main class="main">
-      <div class="message" id="message">Player X's turn</div>
-      <div class="gameboard">
-        <div class="field" data-index="0"></div>
-        <div class="field" data-index="1"></div>
-        <div class="field" data-index="2"></div>
-        <div class="field" data-index="3"></div>
-        <div class="field" data-index="4"></div>
-        <div class="field" data-index="5"></div>
-        <div class="field" data-index="6"></div>
-        <div class="field" data-index="7"></div>
-        <div class="field" data-index="8"></div>
-      </div>
-      <div class="center">
-        <button class="restart-button" id="restart-button">Restart</button>
-      </div>
-    </main>
-    <footer class="footer">
-      <p>Copyright © 2024 SM YOGEESH</p>
-      <a href="https://github.com/yogeesh" target="_blank">
-        <i class="fab fa-github"></i
-      ></a>
-    </footer>
-    <script
-      src="https://kit.fontawesome.com/4c536a6bd5.js"
-      crossorigin="anonymous"
-    ></script>
-  </body>
-</html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tic Tac Toe with Scoreboard</title>
+  <style>
+    /* Basic styles */
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: #f0f0f0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .header {
+      margin-bottom: 10px;
+    }
+    .title {
+      font-family: 'Varela Round', sans-serif;
+      font-size: 2.5rem;
+      color: #333;
+    }
+    .message {
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+      color: #222;
+    }
+    .scoreboard {
+      margin-bottom: 15px;
+      font-size: 1.1rem;
+      color: #555;
+      display: flex;
+      gap: 30px;
+      justify-content: center;
+    }
+    .scoreboard p {
+      margin: 0;
+    }
+    .gameboard {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-template-rows: repeat(3, 100px);
+      gap: 5px;
+      margin-bottom: 15px;
+    }
+    .field {
+      background: white;
+      border: 2px solid #888;
+      font-size: 3rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 0.3s ease;
+    }
+    .field:hover {
+      background-color: #e0e0e0;
+    }
+    .field.winning {
+      background-color: #90ee90;
+      border-color: #4caf50;
+    }
+    .center {
+      margin-bottom: 20px;
+    }
+    .restart-button {
+      padding: 10px 20px;
+      font-size: 1rem;
+      background-color: #4caf50;
+      border: none;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .restart-button:hover {
+      background-color: #45a049;
+    }
+    footer {
+      margin-top: auto;
+      font-size: 0.9rem;
+      color: #666;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    footer a {
+      color: #666;
+      text-decoration: none;
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <h1 class="title">Tic-Tac-Toe</h1>
+  </header>
+
+  <main class="main">
+    <div class="message" id="message">Player X's turn</div>
+
+    <div class="scoreboard">
+      <p>Player X Wins: <span id="scoreX">0</span></p>
+      <p>Player O Wins: <span id="scoreO">0</span></p>
+    </div>
+
+    <div class="gameboard" id="gameboard">
+      <div class="field" data-index="0"></div>
+      <div class="field" data-index="1"></div>
+      <div class="field" data-index="2"></div>
+      <div class="field" data-index="3"></div>
+      <div class="field" data-index="4"></div>
+      <div class="field" data-index="5"></div>
+      <div class="field" data-index="6"></div>
+      <div class="field" data-index="7"></div>
+      <div class="field" data-index="8"></div>
+    </div>
+
+    <div class="center">
+      <button class="restart-button" id="restart-button">Restart</button>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>Copyright © 2024 SM YOGEESH</p>
+    <a href="https://github.com/yogeesh" target="_blank" aria-label="GitHub">
+      <!-- FontAwesome GitHub icon -->
+      <svg height="24" width="24" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+        <path d="M8 0C3.58 0 0 3.58 0 8a8 8 0 005.47 7.59c.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2  .37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.22 2.2.82a7.56 7.56 0 012-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.
