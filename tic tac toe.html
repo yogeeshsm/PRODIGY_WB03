@@ -2,133 +2,387 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tic Tac Toe with Scoreboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&family=Varela+Round&display=swap" rel="stylesheet">
   <style>
-    /* Basic styles */
+    /* Reset and basic styles */
+    * {
+      box-sizing: border-box;
+    }
+    
     body {
       font-family: 'Roboto', sans-serif;
-      background: #f0f0f0;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       margin: 0;
       display: flex;
       flex-direction: column;
       align-items: center;
       min-height: 100vh;
       padding: 20px;
-    }
-    .header {
-      margin-bottom: 10px;
-    }
-    .title {
-      font-family: 'Varela Round', sans-serif;
-      font-size: 2.5rem;
       color: #333;
     }
-    .message {
-      font-size: 1.2rem;
-      margin-bottom: 10px;
-      color: #222;
+    
+    .container {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+      max-width: 500px;
+      width: 100%;
+      text-align: center;
     }
-    .scoreboard {
+    
+    .header {
+      margin-bottom: 20px;
+    }
+    
+    .title {
+      font-family: 'Varela Round', sans-serif;
+      font-size: clamp(2rem, 5vw, 2.5rem);
+      color: #333;
+      margin: 0;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .message {
+      font-size: clamp(1rem, 3vw, 1.2rem);
       margin-bottom: 15px;
-      font-size: 1.1rem;
+      color: #222;
+      font-weight: 500;
+      min-height: 30px;
+    }
+    
+    .scoreboard {
+      margin-bottom: 20px;
+      font-size: clamp(0.9rem, 2.5vw, 1.1rem);
       color: #555;
       display: flex;
-      gap: 30px;
+      gap: clamp(15px, 5vw, 30px);
       justify-content: center;
+      flex-wrap: wrap;
     }
+    
     .scoreboard p {
       margin: 0;
+      background: rgba(76, 175, 80, 0.1);
+      padding: 8px 15px;
+      border-radius: 10px;
+      border: 2px solid rgba(76, 175, 80, 0.3);
     }
+    
     .gameboard {
       display: grid;
-      grid-template-columns: repeat(3, 100px);
-      grid-template-rows: repeat(3, 100px);
-      gap: 5px;
-      margin-bottom: 15px;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 20px;
+      max-width: 300px;
+      width: 100%;
+      aspect-ratio: 1;
+      margin-left: auto;
+      margin-right: auto;
     }
+    
     .field {
       background: white;
-      border: 2px solid #888;
-      font-size: 3rem;
+      border: 3px solid #ddd;
+      font-size: clamp(2rem, 8vw, 3rem);
       display: flex;
       justify-content: center;
       align-items: center;
       cursor: pointer;
       user-select: none;
-      transition: background-color 0.3s ease;
+      transition: all 0.3s ease;
+      border-radius: 12px;
+      font-weight: bold;
+      color: #333;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
-    .field:hover {
-      background-color: #e0e0e0;
+    
+    .field:hover:not(.taken) {
+      background-color: #f0f0f0;
+      transform: scale(1.05);
+      border-color: #4caf50;
     }
+    
     .field.winning {
       background-color: #90ee90;
       border-color: #4caf50;
+      animation: pulse 1s infinite;
     }
+    
+    .field.taken {
+      cursor: not-allowed;
+    }
+    
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    
     .center {
       margin-bottom: 20px;
     }
+    
     .restart-button {
-      padding: 10px 20px;
-      font-size: 1rem;
-      background-color: #4caf50;
+      padding: 12px 24px;
+      font-size: clamp(0.9rem, 2.5vw, 1rem);
+      background: linear-gradient(45deg, #4caf50, #45a049);
       border: none;
       color: white;
-      border-radius: 5px;
+      border-radius: 25px;
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      transition: all 0.3s ease;
+      font-weight: 500;
+      box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
     }
+    
     .restart-button:hover {
-      background-color: #45a049;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
     }
+    
+    .restart-button:active {
+      transform: translateY(0);
+    }
+    
     footer {
-      margin-top: auto;
-      font-size: 0.9rem;
-      color: #666;
+      margin-top: 20px;
+      font-size: clamp(0.8rem, 2vw, 0.9rem);
+      color: rgba(255, 255, 255, 0.8);
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: 8px;
+      flex-wrap: wrap;
     }
+    
     footer a {
-      color: #666;
+      color: rgba(255, 255, 255, 0.9);
       text-decoration: none;
-      font-size: 1.2rem;
+      transition: color 0.3s ease;
+    }
+    
+    footer a:hover {
+      color: white;
+    }
+    
+    /* Mobile responsiveness */
+    @media (max-width: 480px) {
+      body {
+        padding: 10px;
+      }
+      
+      .container {
+        padding: 15px;
+      }
+      
+      .gameboard {
+        gap: 5px;
+      }
+      
+      .field {
+        border-width: 2px;
+      }
+      
+      .scoreboard {
+        gap: 10px;
+      }
+      
+      .scoreboard p {
+        padding: 6px 10px;
+        font-size: 0.9rem;
+      }
+    }
+    
+    /* Landscape mobile */
+    @media (max-height: 600px) and (orientation: landscape) {
+      .title {
+        font-size: 1.8rem;
+      }
+      
+      .container {
+        padding: 15px;
+      }
+      
+      .gameboard {
+        max-width: 250px;
+      }
     }
   </style>
 </head>
 <body>
-  <header class="header">
-    <h1 class="title">Tic-Tac-Toe</h1>
-  </header>
-
-  <main class="main">
-    <div class="message" id="message">Player X's turn</div>
-
-    <div class="scoreboard">
-      <p>Player X Wins: <span id="scoreX">0</span></p>
-      <p>Player O Wins: <span id="scoreO">0</span></p>
-    </div>
-
-    <div class="gameboard" id="gameboard">
-      <div class="field" data-index="0"></div>
-      <div class="field" data-index="1"></div>
-      <div class="field" data-index="2"></div>
-      <div class="field" data-index="3"></div>
-      <div class="field" data-index="4"></div>
-      <div class="field" data-index="5"></div>
-      <div class="field" data-index="6"></div>
-      <div class="field" data-index="7"></div>
-      <div class="field" data-index="8"></div>
-    </div>
-
-    <div class="center">
-      <button class="restart-button" id="restart-button">Restart</button>
-    </div>
-  </main>
-
+  <div class="container">
+    <header class="header">
+      <h1 class="title">Tic-Tac-Toe</h1>
+    </header>
+    <main class="main">
+      <div class="message" id="message">Player X's turn</div>
+      <div class="scoreboard">
+        <p>Player X Wins: <span id="scoreX">0</span></p>
+        <p>Player O Wins: <span id="scoreO">0</span></p>
+      </div>
+      <div class="gameboard" id="gameboard">
+        <div class="field" data-index="0"></div>
+        <div class="field" data-index="1"></div>
+        <div class="field" data-index="2"></div>
+        <div class="field" data-index="3"></div>
+        <div class="field" data-index="4"></div>
+        <div class="field" data-index="5"></div>
+        <div class="field" data-index="6"></div>
+        <div class="field" data-index="7"></div>
+        <div class="field" data-index="8"></div>
+      </div>
+      <div class="center">
+        <button class="restart-button" id="restart-button">New Game</button>
+      </div>
+    </main>
+  </div>
+  
   <footer class="footer">
     <p>Copyright © 2024 SM YOGEESH</p>
     <a href="https://github.com/yogeesh" target="_blank" aria-label="GitHub">
-      <!-- FontAwesome GitHub icon -->
-      <svg height="24" width="24" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
-        <path d="M8 0C3.58 0 0 3.58 0 8a8 8 0 005.47 7.59c.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2  .37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.22 2.2.82a7.56 7.56 0 012-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.
+      <svg height="20" width="20" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.22 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+      </svg>
+    </a>
+  </footer>
+
+  <script>
+    // Game state
+    let board = ['', '', '', '', '', '', '', '', ''];
+    let currentPlayer = 'X';
+    let gameActive = true;
+    let scores = { X: 0, O: 0 };
+
+    // Winning combinations
+    const winningConditions = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6]
+    ];
+
+    // DOM elements
+    const messageElement = document.getElementById('message');
+    const gameboardElement = document.getElementById('gameboard');
+    const restartButton = document.getElementById('restart-button');
+    const scoreXElement = document.getElementById('scoreX');
+    const scoreOElement = document.getElementById('scoreO');
+    const fields = document.querySelectorAll('.field');
+
+    // Initialize game
+    function initGame() {
+      fields.forEach((field, index) => {
+        field.addEventListener('click', () => handleCellClick(index));
+      });
+      restartButton.addEventListener('click', restartGame);
+      updateScoreboard();
+    }
+
+    // Handle cell click
+    function handleCellClick(index) {
+      if (board[index] !== '' || !gameActive) return;
+
+      board[index] = currentPlayer;
+      updateCell(index, currentPlayer);
+      
+      if (checkWin()) {
+        handleWin();
+      } else if (checkDraw()) {
+        handleDraw();
+      } else {
+        switchPlayer();
+      }
+    }
+
+    // Update cell display
+    function updateCell(index, player) {
+      const field = fields[index];
+      field.textContent = player;
+      field.classList.add('taken');
+      
+      // Add color for X and O
+      if (player === 'X') {
+        field.style.color = '#e74c3c';
+      } else {
+        field.style.color = '#3498db';
+      }
+    }
+
+    // Switch current player
+    function switchPlayer() {
+      currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+      messageElement.textContent = `Player ${currentPlayer}'s turn`;
+    }
+
+    // Check for win
+    function checkWin() {
+      return winningConditions.some(condition => {
+        const [a, b, c] = condition;
+        if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+          highlightWinningCells(condition);
+          return true;
+        }
+        return false;
+      });
+    }
+
+    // Check for draw
+    function checkDraw() {
+      return board.every(cell => cell !== '');
+    }
+
+    // Highlight winning cells
+    function highlightWinningCells(winningCells) {
+      winningCells.forEach(index => {
+        fields[index].classList.add('winning');
+      });
+    }
+
+    // Handle win
+    function handleWin() {
+      scores[currentPlayer]++;
+      messageElement.textContent = `🎉 Player ${currentPlayer} wins!`;
+      gameActive = false;
+      updateScoreboard();
+    }
+
+    // Handle draw
+    function handleDraw() {
+      messageElement.textContent = "🤝 It's a draw!";
+      gameActive = false;
+    }
+
+    // Update scoreboard
+    function updateScoreboard() {
+      scoreXElement.textContent = scores.X;
+      scoreOElement.textContent = scores.O;
+    }
+
+    // Restart game
+    function restartGame() {
+      board = ['', '', '', '', '', '', '', '', ''];
+      currentPlayer = 'X';
+      gameActive = true;
+      messageElement.textContent = "Player X's turn";
+      
+      fields.forEach(field => {
+        field.textContent = '';
+        field.classList.remove('taken', 'winning');
+        field.style.color = '#333';
+      });
+    }
+
+    // Initialize the game when page loads
+    initGame();
+  </script>
+</body>
+</html>
