@@ -1,18 +1,26 @@
 :root {
-  --background-color: #c5c3c6;
+  /* General */
+  --font: 'Varela Round', sans-serif;
   --font-color: #46494b;
+  --background-color: #c5c3c6;
+
+  /* Header */
   --header-background-color: #4c5c68;
   --header-font-color: #b0e4db;
+  --blue-border-color: #2a3a46;
+
+  /* Gameboard/Fields */
   --field-background-color: #ededee;
   --field-background-color-hover: #d8e4e9;
   --border-color: #555;
-  --blue-border-color: #2a3a46;
+
+  /* Buttons */
   --button-background-color: #4c5c68;
   --button-hover-background: #3b4b57;
   --button-active-background: #2a3a46;
-  --font: 'Varela Round', sans-serif;
 }
 
+/* Reset and base styles */
 *,
 *::after,
 *::before {
@@ -32,12 +40,18 @@ body {
   color: var(--font-color);
   font-family: var(--font);
   line-height: 1.6;
-  /* footer support */
-  margin-bottom: 80px;
+  margin-bottom: 80px; /* footer support */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 h1 {
   line-height: 1.2;
+}
+
+::selection {
+  background: var(--header-background-color);
+  color: var(--header-font-color);
 }
 
 button {
@@ -49,8 +63,15 @@ button {
   outline: none;
 }
 
-/* HEADER */
+/* Accessibility: Focus styles */
+button:focus,
+.restart-button:focus,
+.field:focus {
+  outline: 3px solid var(--blue-border-color);
+  outline-offset: 2px;
+}
 
+/* HEADER */
 .header {
   padding: 20px;
   border-bottom: 3px solid var(--blue-border-color);
@@ -59,52 +80,61 @@ button {
 }
 
 .title {
-  font-size: 100px;
+  font-size: clamp(36px, 10vw, 100px);
   text-align: center;
 }
 
 /* MAIN */
-
 .main {
   padding: 0 20px;
 }
 
 .message {
   padding: 20px 0;
-  font-size: 50px;
+  font-size: clamp(24px, 6vw, 50px);
   text-align: center;
 }
 
 .gameboard {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  width: 454px;
-  height: 454px;
+  width: min(90vw, 454px);
+  height: min(90vw, 454px);
   border: 2px solid var(--border-color);
-  margin: 0px auto;
+  margin: 0 auto;
 }
 
 .field {
-  width: 150px;
-  height: 150px;
+  width: 33vw;
+  max-width: 150px;
+  height: 33vw;
+  max-height: 150px;
   border: 1px solid var(--border-color);
   background-color: var(--field-background-color);
-  font-size: 100px;
+  font-size: clamp(36px, 12vw, 100px);
   text-align: center;
   cursor: pointer;
   user-select: none;
+  transition: background 0.2s, box-shadow 0.2s;
 }
 
 .field:hover {
   background-color: var(--field-background-color-hover);
 }
 
+.field:focus-visible {
+  box-shadow: 0 0 0 3px var(--blue-border-color);
+  z-index: 1;
+}
+
+/* Centering utility */
 .center {
   display: flex;
   justify-content: center;
   padding: 30px;
 }
 
+/* BUTTONS */
 .restart-button {
   padding: 10px 20px;
   border: 3px solid var(--blue-border-color);
@@ -112,10 +142,13 @@ button {
   background-color: var(--button-background-color);
   color: var(--header-font-color);
   font-size: 50px;
+  transition: background 0.2s, transform 0.15s;
 }
 
-.restart-button:hover {
+.restart-button:hover,
+.restart-button:focus-visible {
   background-color: var(--button-hover-background);
+  transform: scale(1.05);
 }
 
 .restart-button:active {
@@ -123,18 +156,20 @@ button {
 }
 
 /* FOOTER */
-
 .footer {
-  position: absolute;
+  position: fixed;
   bottom: 0;
   left: 0;
+  z-index: 100;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  width: 100%;
+  width: 100vw;
   padding: 10px;
   font-size: 20px;
+  background: rgba(245,245,245,0.9);
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
 }
 
 .fa-github {
@@ -147,26 +182,28 @@ button {
   transform: rotate(360deg) scale(1.2);
 }
 
-/* MEDIA QUERIES */
+/* Accessibility: Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .fa-github {
+    transition: none;
+  }
+}
 
+/* MEDIA QUERIES */
 @media (max-width: 660px) {
   .title {
     font-size: 60px;
   }
-
   .message {
     font-size: 40px;
   }
-
   .restart-button {
     font-size: 40px;
   }
-
   .gameboard {
     width: 304px;
     height: 304px;
   }
-
   .field {
     width: 100px;
     height: 100px;
@@ -178,11 +215,9 @@ button {
   .title {
     font-size: 50px;
   }
-
   .message {
     font-size: 36px;
   }
-
   .restart-button {
     font-size: 36px;
   }
